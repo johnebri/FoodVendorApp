@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.johnebri.foodvendorapp.vendor.data.Vendor;
+import com.johnebri.foodvendorapp.vendor.data.VendorSignupResponse;
 import com.johnebri.foodvendorapp.vendor.service.VendorService;
 
 @RestController
@@ -30,7 +31,7 @@ public class VendorController {
 	
 	// vendor registration
 	@PostMapping("/vendors")
-	public Vendor signup(@RequestBody Vendor vendor) {
+	public VendorSignupResponse signup(@RequestBody Vendor vendor) {
 		return vendorSvc.save(vendor);		
 	}
 	

@@ -1,9 +1,7 @@
-package com.johnebri.foodvendorapp.vendor.data;
-
+package com.johnebri.foodvendorapp.auth.data;
 
 import java.sql.Timestamp;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -13,26 +11,26 @@ import javax.persistence.Table;
 import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
-@Table(name="Vendor")
-public class Vendor {
+@Table(name="authentication")
+public class AuthenticationData {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
-	private String businessName;
 	private String email;
-	private String phoneNumber;
+	private String password;
 	@CreationTimestamp //this adds the default timestamp on save
 	private Timestamp dateTimeCreated;
 	
-	public Vendor() { }
+	public AuthenticationData() {
+		
+	}
 
-	public Vendor(int id, String businessName, String email, String phoneNumber, Timestamp dateTimeCreated) {
+	public AuthenticationData(int id, String email, String password, Timestamp dateTimeCreated) {
 		super();
 		this.id = id;
-		this.businessName = businessName;
 		this.email = email;
-		this.phoneNumber = phoneNumber;
+		this.password = password;
 		this.dateTimeCreated = dateTimeCreated;
 	}
 
@@ -44,14 +42,6 @@ public class Vendor {
 		this.id = id;
 	}
 
-	public String getBusinessName() {
-		return businessName;
-	}
-
-	public void setBusinessName(String businessName) {
-		this.businessName = businessName;
-	}
-
 	public String getEmail() {
 		return email;
 	}
@@ -60,12 +50,12 @@ public class Vendor {
 		this.email = email;
 	}
 
-	public String getPhoneNumber() {
-		return phoneNumber;
+	public String getPassword() {
+		return password;
 	}
 
-	public void setPhoneNumber(String phoneNumber) {
-		this.phoneNumber = phoneNumber;
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	public Timestamp getDateTimeCreated() {
@@ -74,6 +64,6 @@ public class Vendor {
 
 	public void setDateTimeCreated(Timestamp dateTimeCreated) {
 		this.dateTimeCreated = dateTimeCreated;
-	}
+	}	
 
 }
