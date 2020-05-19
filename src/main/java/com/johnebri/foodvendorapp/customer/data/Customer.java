@@ -1,5 +1,4 @@
-package com.johnebri.foodvendorapp.vendor.data;
-
+package com.johnebri.foodvendorapp.customer.data;
 
 import java.sql.Timestamp;
 
@@ -7,31 +6,36 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
-@Table(name="Vendor")
-public class Vendor{
+public class Customer {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
-	private String businessName;
+	private String firstname;
+	private String lastname;
 	private String email;
 	private String phoneNumber;
-	@CreationTimestamp //this adds the default timestamp on save
+	private double amountOutstanding;
+	@CreationTimestamp
 	private Timestamp dateTimeCreated;
 	
-	public Vendor() { }
+	public Customer() {
+		
+	}
 
-	public Vendor(int id, String businessName, String email, String phoneNumber, Timestamp dateTimeCreated) {
+	public Customer(int id, String firstname, String lastname, String email, String phoneNumber,
+			double amountOutstanding, Timestamp dateTimeCreated) {
 		super();
 		this.id = id;
-		this.businessName = businessName;
+		this.firstname = firstname;
+		this.lastname = lastname;
 		this.email = email;
 		this.phoneNumber = phoneNumber;
+		this.amountOutstanding = amountOutstanding;
 		this.dateTimeCreated = dateTimeCreated;
 	}
 
@@ -43,12 +47,20 @@ public class Vendor{
 		this.id = id;
 	}
 
-	public String getBusinessName() {
-		return businessName;
+	public String getFirstname() {
+		return firstname;
 	}
 
-	public void setBusinessName(String businessName) {
-		this.businessName = businessName;
+	public void setFirstname(String firstname) {
+		this.firstname = firstname;
+	}
+
+	public String getLastname() {
+		return lastname;
+	}
+
+	public void setLastname(String lastname) {
+		this.lastname = lastname;
 	}
 
 	public String getEmail() {
@@ -67,6 +79,14 @@ public class Vendor{
 		this.phoneNumber = phoneNumber;
 	}
 
+	public double getAmountOutstanding() {
+		return amountOutstanding;
+	}
+
+	public void setAmountOutstanding(double amountOutstanding) {
+		this.amountOutstanding = amountOutstanding;
+	}
+
 	public Timestamp getDateTimeCreated() {
 		return dateTimeCreated;
 	}
@@ -74,5 +94,5 @@ public class Vendor{
 	public void setDateTimeCreated(Timestamp dateTimeCreated) {
 		this.dateTimeCreated = dateTimeCreated;
 	}
-
+	
 }

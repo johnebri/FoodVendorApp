@@ -1,11 +1,19 @@
-package com.johnebri.foodvendorapp.vendor.data;
+package com.johnebri.foodvendorapp.util.data;
 
-public class Status {
+public class UtilStatus {
 	
 	private String responseCode;
 	private String responseMessage;
 	
-	public Status() { }
+	public UtilStatus() {
+		
+	}
+
+	public UtilStatus(String responseCode, String responseMessage) {
+		super();
+		this.responseCode = responseCode;
+		this.responseMessage = responseMessage;
+	}
 
 	public String getResponseCode() {
 		return responseCode;

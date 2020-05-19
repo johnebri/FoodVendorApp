@@ -10,28 +10,26 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.johnebri.foodvendorapp.util.data.UtilResponse;
 import com.johnebri.foodvendorapp.vendor.data.Vendor;
-import com.johnebri.foodvendorapp.vendor.data.VendorSignupResponse;
 import com.johnebri.foodvendorapp.vendor.service.VendorService;
 
 @RestController
-@RequestMapping("/api/v1")
 public class VendorController {
 	
 	@Autowired
 	private VendorService vendorSvc;
 	
-	@GetMapping("/")
+	@GetMapping("/hello")
 	public String hello() {
 		return "Now you have started";
 	}
 	
 	// vendor registration
 	@PostMapping("/vendors")
-	public VendorSignupResponse signup(@RequestBody Vendor vendor) {
+	public UtilResponse signup(@RequestBody Vendor vendor) {
 		return vendorSvc.save(vendor);		
 	}
 	
@@ -45,13 +43,17 @@ public class VendorController {
 	@GetMapping("/vendors/{vendorId}")
 	public Optional<Vendor> getVendor(@PathVariable(value="vendorId") int id) {
 		return vendorSvc.getVendor(id);
-	}
-	
+	}	
 	
 	// edit vendor information
 	@PutMapping("/vendors/{vendorId}")
 	public ResponseEntity<Vendor> editVendor(@PathVariable(value="vendorId") int id, @RequestBody Vendor vendor) {
 		return vendorSvc.editVendor(vendor, id);
-	}	
+	}
+	
+	@PostMapping("/vendors/{vendorId}/menu")
+	public String createMenu() {
+		return "";
+	}
 
 }
