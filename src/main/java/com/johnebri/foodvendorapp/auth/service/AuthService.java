@@ -62,7 +62,7 @@ public class AuthService {
 		
 		// check if email already exist
 		Optional<AuthenticationData> authData = authRepo.findByEmail(newAuthData.getEmail());
-		if(authData != null) {
+		if(authData.isPresent()) {
 			// email is already in use				
 			return utilService.createResponse( null, "400", 
 					"A user already exist with the email you entered"
@@ -86,7 +86,9 @@ public class AuthService {
 				new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword())
 			);	
 		} catch(BadCredentialsException e) {
-			throw new Exception("Incorrect username or password", e);
+			return utilService.createResponse( null, "403", 
+					"Incorrect username or password"
+			);
 		}
 		
 		final UserDetails userDetails = userDetailsService.loadUserByEmail(authRequest.getEmail());

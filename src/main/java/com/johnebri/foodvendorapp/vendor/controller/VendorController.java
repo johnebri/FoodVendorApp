@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.johnebri.foodvendorapp.menu.data.Menu;
 import com.johnebri.foodvendorapp.menu.service.MenuService;
 import com.johnebri.foodvendorapp.util.data.UtilResponse;
 import com.johnebri.foodvendorapp.vendor.data.Vendor;
@@ -60,8 +61,25 @@ public class VendorController {
 	}
 	
 	@PostMapping("/vendors/{vendorId}/menu")
-	public String createMenu() {
-		return "";
+	public UtilResponse createMenu(@RequestBody Menu menu, HttpServletRequest request) {
+		return menuSvc.createMenu(menu, request);
+	}
+	
+	@GetMapping("/vendors/mymenu")
+	public List<Menu> vendorMenu(HttpServletRequest request) {
+		return menuSvc.getVendorMenu(request);
+	}
+	
+	@PutMapping("/vendors/mymenu")
+	public UtilResponse updateMenu(@RequestBody Menu menu, HttpServletRequest request) {
+		return menuSvc.updateVendorMenu(menu, request);
+	}
+	
+	
+	
+	@GetMapping("/menu") 
+	public List<Menu> getAllMenu() {
+		return menuSvc.allMenu();
 	}
 
 }

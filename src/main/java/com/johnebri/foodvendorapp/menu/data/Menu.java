@@ -2,12 +2,14 @@ package com.johnebri.foodvendorapp.menu.data;
 
 import java.sql.Timestamp;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Type;
 
 @Entity
 public class Menu {
@@ -20,15 +22,15 @@ public class Menu {
 	private double price;
 	private Long quantity;	
 	private int vendorId;
-	private boolean isRecurring;
-	private String frequencyOfRecocurrence;
+	private String isRecurring;
+	private String frequencyOfRecurrence;
 	@CreationTimestamp
 	private Timestamp dateTimeCreated;
 	
 	public Menu() { }
 
-	public Menu(int id, String name, String description, double price, Long quantity, int vendorId, boolean isRecurring,
-			String frequencyOfRecocurrence, Timestamp dateTimeCreated) {
+	public Menu(int id, String name, String description, double price, Long quantity, int vendorId, String isRecurring,
+			String frequencyOfRecurrence, Timestamp dateTimeCreated) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -37,7 +39,7 @@ public class Menu {
 		this.quantity = quantity;
 		this.vendorId = vendorId;
 		this.isRecurring = isRecurring;
-		this.frequencyOfRecocurrence = frequencyOfRecocurrence;
+		this.frequencyOfRecurrence = frequencyOfRecurrence;
 		this.dateTimeCreated = dateTimeCreated;
 	}
 
@@ -89,20 +91,20 @@ public class Menu {
 		this.vendorId = vendorId;
 	}
 
-	public boolean isRecurring() {
+	public String getIsRecurring() {
 		return isRecurring;
 	}
 
-	public void setRecurring(boolean isRecurring) {
+	public void setIsRecurring(String isRecurring) {
 		this.isRecurring = isRecurring;
 	}
 
-	public String getFrequencyOfRecocurrence() {
-		return frequencyOfRecocurrence;
+	public String getFrequencyOfRecurrence() {
+		return frequencyOfRecurrence;
 	}
 
-	public void setFrequencyOfRecocurrence(String frequencyOfRecocurrence) {
-		this.frequencyOfRecocurrence = frequencyOfRecocurrence;
+	public void setFrequencyOfRecurrence(String frequencyOfRecurrence) {
+		this.frequencyOfRecurrence = frequencyOfRecurrence;
 	}
 
 	public Timestamp getDateTimeCreated() {
@@ -112,5 +114,5 @@ public class Menu {
 	public void setDateTimeCreated(Timestamp dateTimeCreated) {
 		this.dateTimeCreated = dateTimeCreated;
 	}	
-
+	
 }
