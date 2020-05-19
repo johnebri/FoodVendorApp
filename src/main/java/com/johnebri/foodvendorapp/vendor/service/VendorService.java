@@ -28,7 +28,6 @@ public class VendorService {
 		
 		if(vendorEmailSearchRes != null) {
 			// email is already in use
-			vendorSignpuResponse.setVendor(null);
 			status.setResponseCode("401");
 			status.setResponseMessage("A vendor with this email already exists");
 			vendorSignpuResponse.setStatus(status);

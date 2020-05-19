@@ -13,6 +13,12 @@ public class AuthService {
 	private AuthenticationRepository authRepo;
 	
 	public AuthenticationData setPassword(AuthenticationData authData) {
+		
+		// check if email already exist
+		if(authRepo.findByEmail(authData.getEmail())) {
+			// email is already in use
+			
+		}
 		return authRepo.save(authData);
 	}
 
