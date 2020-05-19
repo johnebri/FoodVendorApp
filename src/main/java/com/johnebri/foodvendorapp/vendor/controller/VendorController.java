@@ -3,6 +3,8 @@ package com.johnebri.foodvendorapp.vendor.controller;
 import java.util.List;
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.johnebri.foodvendorapp.menu.service.MenuService;
 import com.johnebri.foodvendorapp.util.data.UtilResponse;
 import com.johnebri.foodvendorapp.vendor.data.Vendor;
 import com.johnebri.foodvendorapp.vendor.service.VendorService;
@@ -19,8 +22,13 @@ import com.johnebri.foodvendorapp.vendor.service.VendorService;
 @RestController
 public class VendorController {
 	
+
+	
 	@Autowired
 	private VendorService vendorSvc;
+	
+	@Autowired
+	private MenuService menuSvc;
 	
 	@GetMapping("/hello")
 	public String hello() {
@@ -41,7 +49,7 @@ public class VendorController {
 	
 	// get a vendor
 	@GetMapping("/vendors/{vendorId}")
-	public Optional<Vendor> getVendor(@PathVariable(value="vendorId") int id) {
+	public Optional<Vendor> getVendor(@PathVariable(value="vendorId") int id, HttpServletRequest request) {
 		return vendorSvc.getVendor(id);
 	}	
 	
