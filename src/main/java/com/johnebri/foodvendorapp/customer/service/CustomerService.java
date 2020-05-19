@@ -1,5 +1,7 @@
 package com.johnebri.foodvendorapp.customer.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,11 +34,17 @@ public class CustomerService {
 		// check if phone number already exist
 		if( customerRepo.findByPhoneNumber(newCustomer.getPhoneNumber()) != null ) {
 			// customer already exist with this phone number
-			return utilService.createResponse(null, "400", "A customer with the phone number you provided already exist");
+			return utilService.createResponse(null, "400", 
+					"A customer with the phone number you provided already exist");
 		}
 		
 		Customer customer = customerRepo.save(newCustomer);
-		return utilService.createResponse(customer, "200", "Registration was successful. You can now set your password");
+		return utilService.createResponse(customer, "200", 
+				"Registration was successful. You can now set your password");
+	}
+	
+	public List<Customer> getAllCustomers() {
+		return customerRepo.findAll();
 	}
 
 }
