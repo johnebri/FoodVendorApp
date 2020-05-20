@@ -21,5 +21,9 @@ public interface OrdersRepository extends JpaRepository<Orders, Integer>{
 	@Modifying
 	@Query("UPDATE Orders set order_status = ?1 WHERE id = ?2")
 	void payForOrder(String status, int id);
+	
+	@Modifying
+	@Query("UPDATE Orders set order_status = ?1 WHERE id = ?2")
+	void vendorUpdateOrderStatus(String status, int id);
 
 }

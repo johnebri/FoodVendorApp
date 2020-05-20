@@ -204,7 +204,42 @@ public class OrdersService {
 		ordersRepo.payForOrder("paid", orderId);		
 		
 		return utilSvc.createResponse(null, "200",
-				"Order Paid Successfully");
+				"Order Paid Successfully");		
+	}
+	
+	public UtilResponse updateOrderStatus(HttpServletRequest request, int orderId) {
+		
+		// check if order exist 
+		int id = utilSvc.getVendorId(request);
+		Orders order = ordersRepo.findById(orderId);
+		
+		if(order == null) {
+			return utilSvc.createResponse(null, "400",
+					"No Order found");
+		}
+		
+		// check if order belongs to vendor making request
+		if(id != order.getVendorId()) {
+			return utilSvc.createResponse(null, "400",
+					"Order does not belong to vendor");
+		}
+		
+		// check status or order	
+		String orderStatus = order.getOrderStatus();
+		
+		if(orderStatus.equals("cancelled")) {
+			return utilSvc.createResponse(null, "200",
+					"Order is already cancelled");
+		}
+		
+//		if(orderStatus.equals("paid")) {
+//			return utilSvc.createResponse(null, "200",
+//					"You have already paid for this order");
+//		}	
+		
+		ordersRepo.vendorUpdateOrderStatus("delivered", orderId);
+		return utilSvc.createResponse(null, "200",
+				"Order updated successfully");
 		
 	}
 }

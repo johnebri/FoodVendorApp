@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.johnebri.foodvendorapp.menu.data.Menu;
 import com.johnebri.foodvendorapp.menu.service.MenuService;
 import com.johnebri.foodvendorapp.orders.data.Orders;
+import com.johnebri.foodvendorapp.orders.service.OrdersService;
 import com.johnebri.foodvendorapp.util.data.UtilResponse;
 import com.johnebri.foodvendorapp.vendor.data.Vendor;
 import com.johnebri.foodvendorapp.vendor.service.VendorService;
@@ -29,6 +30,9 @@ public class VendorController {
 	
 	@Autowired
 	private MenuService menuSvc;
+	
+	@Autowired
+	private OrdersService ordersSvc;
 	
 	@GetMapping("/hello")
 	public String hello() {
@@ -79,8 +83,9 @@ public class VendorController {
 		return vendorSvc.viewOrders(request);		
 	}
 	
-	public String updateOrderStatus() {
-		return null;
+	@PutMapping("/vendors/orders/{orderId}/update")
+	public UtilResponse updateOrderStatus(HttpServletRequest request, @PathVariable(value="orderId") int id) {
+		return ordersSvc.updateOrderStatus(request, id);
 	}
 	
 
