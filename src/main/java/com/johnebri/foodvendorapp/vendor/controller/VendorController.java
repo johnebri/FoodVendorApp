@@ -60,26 +60,24 @@ public class VendorController {
 		return vendorSvc.editVendor(vendor, id);
 	}
 	
-	@PostMapping("/vendors/{vendorId}/menu")
+	@PostMapping("/vendors/menu")
 	public UtilResponse createMenu(@RequestBody Menu menu, HttpServletRequest request) {
 		return menuSvc.createMenu(menu, request);
 	}
 	
-	@GetMapping("/vendors/mymenu")
+	@GetMapping("/vendors/menu")
 	public List<Menu> vendorMenu(HttpServletRequest request) {
 		return menuSvc.getVendorMenu(request);
 	}
 	
-	@PutMapping("/vendors/mymenu")
+	@PutMapping("/vendors/menu")
 	public UtilResponse updateMenu(@RequestBody Menu menu, HttpServletRequest request) {
 		return menuSvc.updateVendorMenu(menu, request);
-	}
+	}	
 	
-	
-	
-	@GetMapping("/menu") 
-	public List<Menu> getAllMenu() {
-		return menuSvc.allMenu();
-	}
+//	@GetMapping("/menu") 
+//	public List<Menu> getAllMenu() {
+//		return menuSvc.allMenu();
+//	}
 
 }

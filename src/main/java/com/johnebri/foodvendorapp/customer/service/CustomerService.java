@@ -1,6 +1,7 @@
 package com.johnebri.foodvendorapp.customer.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,5 +47,10 @@ public class CustomerService {
 	public List<Customer> getAllCustomers() {
 		return customerRepo.findAll();
 	}
+	
+	public Optional<Customer> getCustomer(int id) {
+		return customerRepo.findById(id);
+	}
+	
 
 }
