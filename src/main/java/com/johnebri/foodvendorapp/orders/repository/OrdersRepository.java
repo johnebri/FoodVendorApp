@@ -11,6 +11,7 @@ import com.johnebri.foodvendorapp.orders.data.Orders;
 public interface OrdersRepository extends JpaRepository<Orders, Integer>{
 	
 	List<Orders> findByCustomerId(int customerId);
+	List<Orders> findByVendorId(int vendorId);
 	Orders findById(int id);
 	
 	@Modifying

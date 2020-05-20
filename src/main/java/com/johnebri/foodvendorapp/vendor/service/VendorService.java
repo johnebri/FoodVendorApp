@@ -3,10 +3,14 @@ package com.johnebri.foodvendorapp.vendor.service;
 import java.util.List;
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.johnebri.foodvendorapp.orders.data.Orders;
+import com.johnebri.foodvendorapp.orders.repository.OrdersRepository;
 import com.johnebri.foodvendorapp.util.data.UtilResponse;
 import com.johnebri.foodvendorapp.util.data.UtilStatus;
 import com.johnebri.foodvendorapp.util.service.UtilService;
@@ -17,22 +21,25 @@ import com.johnebri.foodvendorapp.vendor.repository.VendorRepository;
 public class VendorService {
 	
 	@Autowired
-	private VendorRepository vendorRepository;
+	private VendorRepository vendorRepo;
+	
+	@Autowired
+	private OrdersRepository ordersRepo;
 	
 	@Autowired 
-	UtilService utilService;
+	UtilService utilSvc;
 	
 	UtilResponse utilResponse = new UtilResponse();
 	UtilStatus utilStatus = new UtilStatus();
 	
 	public UtilResponse save(Vendor vendor) {	
 		
-		Vendor vendorEmailSearchRes = vendorRepository.findByEmail(vendor.getEmail());
-		Vendor vendorBusinessSearchRes = vendorRepository.findByBusinessName(vendor.getBusinessName());
+		Vendor vendorEmailSearchRes = vendorRepo.findByEmail(vendor.getEmail());
+		Vendor vendorBusinessSearchRes = vendorRepo.findByBusinessName(vendor.getBusinessName());
 		
 		if(vendorEmailSearchRes != null) {
 			// email is already in use
-			return utilService.createResponse(
+			return utilSvc.createResponse(
 					null, 
 					"400", "A user already exist with that business name"
 			);
@@ -40,39 +47,45 @@ public class VendorService {
 		
 		if(vendorBusinessSearchRes != null) {
 			// email is already in use
-			return utilService.createResponse(null, "400", " A user already exist with this email");
+			return utilSvc.createResponse(null, "400", " A user already exist with this email");
 		}
 		
-		Vendor newVendor = vendorRepository.save(vendor);
-		return utilService.createResponse(newVendor, "200", "success");
+		Vendor newVendor = vendorRepo.save(vendor);
+		return utilSvc.createResponse(newVendor, "200", "success");
 		
 	}
 	
 	public List<Vendor> getVendors() {
 		
-		return vendorRepository.findAll();
+		return vendorRepo.findAll();
 		
 	}
 	
 	public Optional<Vendor> getVendor(int id) {
 		
-		return vendorRepository.findById(id);
+		return vendorRepo.findById(id);
 		
 	}
 	
 	public ResponseEntity<Vendor> editVendor(Vendor newVendorDetails, int id) {		
 		
 		// find the vendor		
-		Optional<Vendor> currentVendor = vendorRepository.findById(id);
+		Optional<Vendor> currentVendor = vendorRepo.findById(id);
 		if(!currentVendor.isPresent()) {
 			// vendor does not exist
 			return ResponseEntity.notFound().build();
 		}
 		
 		newVendorDetails.setId(id);
-		Vendor updatedVendor = vendorRepository.save(newVendorDetails);
+		Vendor updatedVendor = vendorRepo.save(newVendorDetails);
 		
 		return ResponseEntity.ok().body(updatedVendor);
+	}
+	
+	public List<Orders> viewOrders(HttpServletRequest request) {
+		int id = utilSvc.getVendorId(request);
+		return ordersRepo.findByVendorId(id);
+		
 	}
 
 }

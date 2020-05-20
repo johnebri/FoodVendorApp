@@ -16,14 +16,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.johnebri.foodvendorapp.menu.data.Menu;
 import com.johnebri.foodvendorapp.menu.service.MenuService;
+import com.johnebri.foodvendorapp.orders.data.Orders;
 import com.johnebri.foodvendorapp.util.data.UtilResponse;
 import com.johnebri.foodvendorapp.vendor.data.Vendor;
 import com.johnebri.foodvendorapp.vendor.service.VendorService;
 
 @RestController
 public class VendorController {
-	
-
 	
 	@Autowired
 	private VendorService vendorSvc;
@@ -75,9 +74,14 @@ public class VendorController {
 		return menuSvc.updateVendorMenu(menu, request);
 	}	
 	
-//	@GetMapping("/menu") 
-//	public List<Menu> getAllMenu() {
-//		return menuSvc.allMenu();
-//	}
+	@GetMapping("/vendors/orders")
+	public List<Orders> viewOrders(HttpServletRequest request) {
+		return vendorSvc.viewOrders(request);		
+	}
+	
+	public String updateOrderStatus() {
+		return null;
+	}
+	
 
 }
