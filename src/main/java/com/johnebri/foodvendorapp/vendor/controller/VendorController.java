@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.johnebri.foodvendorapp.menu.data.Menu;
 import com.johnebri.foodvendorapp.menu.service.MenuService;
+import com.johnebri.foodvendorapp.notification.data.Notification;
+import com.johnebri.foodvendorapp.notification.service.NotificationService;
 import com.johnebri.foodvendorapp.orders.data.Orders;
 import com.johnebri.foodvendorapp.orders.service.OrdersService;
 import com.johnebri.foodvendorapp.util.data.UtilResponse;
@@ -34,6 +36,10 @@ public class VendorController {
 	
 	@Autowired
 	private OrdersService ordersSvc;
+	
+	@Autowired
+	private NotificationService notificationSvc;
+	
 	
 	@GetMapping("/hello")
 	public String hello() {
@@ -92,6 +98,14 @@ public class VendorController {
 	@GetMapping("/vendors/report")
 	public List<Orders> dailySalesReport(HttpServletRequest request) throws ParseException {
 		return ordersSvc.dailySalesReport(request);
+	}
+	
+	@PostMapping("/vendors/notification/{orderId}")
+	public UtilResponse sendNotification(
+			HttpServletRequest request, 
+			@RequestBody Notification notification, 
+			@PathVariable(value="orderId") int orderId ) {
+		return notificationSvc.sendNotification(request, notification, orderId);
 	}
 		
 
