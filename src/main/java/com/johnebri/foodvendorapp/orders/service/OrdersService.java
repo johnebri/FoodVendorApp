@@ -1,5 +1,6 @@
 package com.johnebri.foodvendorapp.orders.service;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -207,6 +208,7 @@ public class OrdersService {
 				"Order Paid Successfully");		
 	}
 	
+	@Transactional
 	public UtilResponse updateOrderStatus(HttpServletRequest request, int orderId) {
 		
 		// check if order exist 
@@ -241,5 +243,31 @@ public class OrdersService {
 		return utilSvc.createResponse(null, "200",
 				"Order updated successfully");
 		
+	}
+	
+	public List<Orders> dailySalesReport(HttpServletRequest request) throws ParseException {
+		
+		// get vendor id
+		int id = utilSvc.getVendorId(request);
+		
+		// get todays date
+		LocalDateTime now = LocalDateTime.now();
+		
+		SimpleDateFormat sdfo = new SimpleDateFormat("yyyy-MM-dd");
+        String todaysDate = now.toString();
+        Date orderDate = sdfo.parse(todaysDate);
+  
+		System.out.println(now);
+		
+		DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		Date today = new Date();
+		Date todayWithZeroTime = formatter.parse(formatter.format(today));
+		
+		System.out.println("Date without time : " + todayWithZeroTime);
+		
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		System.out.println(dateFormat.format(new Date()));
+		
+		return ordersRepo.getVendorOrders(id, dateFormat.format(new Date()));
 	}
 }

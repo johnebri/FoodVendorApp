@@ -1,5 +1,6 @@
 package com.johnebri.foodvendorapp.vendor.controller;
 
+import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
 
@@ -88,5 +89,10 @@ public class VendorController {
 		return ordersSvc.updateOrderStatus(request, id);
 	}
 	
+	@GetMapping("/vendors/report")
+	public List<Orders> dailySalesReport(HttpServletRequest request) throws ParseException {
+		return ordersSvc.dailySalesReport(request);
+	}
+		
 
 }
