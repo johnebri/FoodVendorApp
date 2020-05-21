@@ -17,20 +17,23 @@ import org.springframework.web.bind.annotation.RestController;
 import com.johnebri.foodvendorapp.customer.data.Customer;
 import com.johnebri.foodvendorapp.customer.service.CustomerService;
 import com.johnebri.foodvendorapp.menu.data.Menu;
+import com.johnebri.foodvendorapp.notification.data.Notification;
+import com.johnebri.foodvendorapp.notification.service.NotificationService;
 import com.johnebri.foodvendorapp.orders.data.Orders;
 import com.johnebri.foodvendorapp.orders.service.OrdersService;
 import com.johnebri.foodvendorapp.util.data.UtilResponse;
 
 @RestController
 public class CustomerController {
-	
-	private OrdersService ordersService;
 
 	@Autowired
 	CustomerService customerSvc;
 	
 	@Autowired
 	OrdersService ordersSvc;
+	
+	@Autowired
+	NotificationService notificationSvc;
 	
 	
 	
@@ -77,6 +80,11 @@ public class CustomerController {
 	@PutMapping("/customers/orders/{orderId}/pay")
 	public UtilResponse payForOrder(HttpServletRequest request, @PathVariable(value="orderId") int id) {
 		return ordersSvc.payForOrder(request, id);
+	}
+	
+	@GetMapping("/customers/notifications")
+	public List<Notification> getMyNotifications(HttpServletRequest request) {
+		return notificationSvc.getNotifications(request);
 	}
 	
 	

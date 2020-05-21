@@ -17,6 +17,7 @@ public class Notification {
 	private int id;
 	private String subjectUser;
 	private int orderId;
+	private int customerId;
 	private String message;	
 	private String messageStatus;
 	@CreationTimestamp
@@ -24,12 +25,13 @@ public class Notification {
 	
 	public Notification() { }
 
-	public Notification(int id, String subjectUser, int orderId, String message, String messageStatus,
+	public Notification(int id, String subjectUser, int orderId, int customerId, String message, String messageStatus,
 			Timestamp dateTimeCreated) {
 		super();
 		this.id = id;
 		this.subjectUser = subjectUser;
 		this.orderId = orderId;
+		this.customerId = customerId;
 		this.message = message;
 		this.messageStatus = messageStatus;
 		this.dateTimeCreated = dateTimeCreated;
@@ -59,12 +61,20 @@ public class Notification {
 		this.orderId = orderId;
 	}
 
+	public int getCustomerId() {
+		return customerId;
+	}
+
+	public void setCustomerId(int customerId) {
+		this.customerId = customerId;
+	}
+
 	public String getMessage() {
 		return message;
 	}
 
-	public void setMessage(String messag) {
-		this.message = messag;
+	public void setMessage(String message) {
+		this.message = message;
 	}
 
 	public String getMessageStatus() {
@@ -82,5 +92,4 @@ public class Notification {
 	public void setDateTimeCreated(Timestamp dateTimeCreated) {
 		this.dateTimeCreated = dateTimeCreated;
 	}	
-
 }

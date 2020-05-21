@@ -1,5 +1,7 @@
 package com.johnebri.foodvendorapp.notification.service;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,10 +48,16 @@ public class NotificationService {
 		
 		// send notification
 		notification.setOrderId(orderId);
+		notification.setCustomerId(order.getCustomerId());
 		Notification savedNotification = notificationRepo.save(notification);
 		
 		return utilSvc.createResponse(savedNotification, "200", "Notification sent successfully");
 		
+	}
+	
+	public List<Notification> getNotifications(HttpServletRequest request) {
+		int customerId = utilSvc.getCustomerId(request);
+		return notificationRepo.getCustomerNotifications(customerId);
 	}
 
 }

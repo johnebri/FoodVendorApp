@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,12 +23,20 @@ import com.johnebri.foodvendorapp.notification.data.Notification;
 import com.johnebri.foodvendorapp.notification.service.NotificationService;
 import com.johnebri.foodvendorapp.orders.data.Orders;
 import com.johnebri.foodvendorapp.orders.service.OrdersService;
+import com.johnebri.foodvendorapp.util.data.Feedback;
 import com.johnebri.foodvendorapp.util.data.UtilResponse;
+import com.johnebri.foodvendorapp.util.service.EmailConfig;
 import com.johnebri.foodvendorapp.vendor.data.Vendor;
 import com.johnebri.foodvendorapp.vendor.service.VendorService;
 
 @RestController
 public class VendorController {
+	
+	private EmailConfig emailConfig;
+	
+	public VendorController(EmailConfig emailConfig) {
+		this.emailConfig = emailConfig;
+	}
 	
 	@Autowired
 	private VendorService vendorSvc;
@@ -106,6 +116,27 @@ public class VendorController {
 			@RequestBody Notification notification, 
 			@PathVariable(value="orderId") int orderId ) {
 		return notificationSvc.sendNotification(request, notification, orderId);
+	}
+	
+	@PostMapping("/sendmail")
+	public void sendMail(@RequestBody Feedback feedback) {
+		// create a mail sender
+		JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+		mailSender.setHost(this.emailConfig.getHost());
+		mailSender.setPort(this.emailConfig.getPort());
+		mailSender.setUsername(this.emailConfig.getUsername());
+		mailSender.setPassword(this.emailConfig.getPassword());
+	
+		// create an email instance
+		SimpleMailMessage mailMessage = new SimpleMailMessage();
+	
+		mailMessage.setFrom(feedback.getEmail());
+		mailMessage.setTo("john.ebri@yahoo.com");
+		mailMessage.setSubject("New Feedback from " + feedback.getName());
+		mailMessage.setText(feedback.getFeedback());
+		
+		// send mail
+		mailSender.send(mailMessage);
 	}
 		
 
