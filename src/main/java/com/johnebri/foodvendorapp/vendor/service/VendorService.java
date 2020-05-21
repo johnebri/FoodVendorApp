@@ -41,17 +41,26 @@ public class VendorService {
 			// email is already in use
 			return utilSvc.createResponse(
 					null, 
-					"400", "A user already exist with that business name"
+					"400", "Email is name is already in use. Please use a different email"
 			);
 		}
 		
 		if(vendorBusinessSearchRes != null) {
 			// email is already in use
-			return utilSvc.createResponse(null, "400", " A user already exist with this email");
+			return utilSvc.createResponse(null, "400", "Business Name is already in use. Please enter a different business name");
 		}
 		
 		Vendor newVendor = vendorRepo.save(vendor);
-		return utilSvc.createResponse(newVendor, "200", "success");
+		
+		// send email to vendor
+		try {
+			utilSvc.sendEmail(vendor.getEmail(), "Welcome Vendor", "Welcome to FoodVendorApp. Click Here to set up your password");
+		} catch (Exception e) {
+			System.out.println("You are not connected to the internet, you will not receive a mail");
+		}
+		
+		return utilSvc.createResponse(newVendor, "200", 
+				"Your Vendor registration was successful. Check your email (" +vendor.getEmail()+") for instructions to set up your password");
 		
 	}
 	

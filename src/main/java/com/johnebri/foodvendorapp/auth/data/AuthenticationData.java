@@ -19,6 +19,7 @@ public class AuthenticationData {
 	private int id;
 	private String email;
 	private String password;
+	private String role;
 	@CreationTimestamp //this adds the default timestamp on save
 	private Timestamp dateTimeCreated;
 	
@@ -26,11 +27,12 @@ public class AuthenticationData {
 		
 	}
 
-	public AuthenticationData(int id, String email, String password, Timestamp dateTimeCreated) {
+	public AuthenticationData(int id, String email, String password, String role, Timestamp dateTimeCreated) {
 		super();
 		this.id = id;
 		this.email = email;
 		this.password = password;
+		this.role = role;
 		this.dateTimeCreated = dateTimeCreated;
 	}
 
@@ -58,12 +60,22 @@ public class AuthenticationData {
 		this.password = password;
 	}
 
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
+
 	public Timestamp getDateTimeCreated() {
 		return dateTimeCreated;
 	}
 
 	public void setDateTimeCreated(Timestamp dateTimeCreated) {
 		this.dateTimeCreated = dateTimeCreated;
-	}	
+	}
+
+	
 
 }

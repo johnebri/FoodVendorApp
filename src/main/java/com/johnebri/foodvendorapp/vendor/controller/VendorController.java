@@ -23,7 +23,7 @@ import com.johnebri.foodvendorapp.notification.data.Notification;
 import com.johnebri.foodvendorapp.notification.service.NotificationService;
 import com.johnebri.foodvendorapp.orders.data.Orders;
 import com.johnebri.foodvendorapp.orders.service.OrdersService;
-import com.johnebri.foodvendorapp.util.data.Feedback;
+import com.johnebri.foodvendorapp.util.data.EmailRequest;
 import com.johnebri.foodvendorapp.util.data.UtilResponse;
 import com.johnebri.foodvendorapp.util.service.EmailConfig;
 import com.johnebri.foodvendorapp.vendor.data.Vendor;
@@ -119,7 +119,7 @@ public class VendorController {
 	}
 	
 	@PostMapping("/sendmail")
-	public void sendMail(@RequestBody Feedback feedback) {
+	public void sendMail(@RequestBody EmailRequest emailReq) {
 		// create a mail sender
 		JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
 		mailSender.setHost(this.emailConfig.getHost());
@@ -130,10 +130,10 @@ public class VendorController {
 		// create an email instance
 		SimpleMailMessage mailMessage = new SimpleMailMessage();
 	
-		mailMessage.setFrom(feedback.getEmail());
+		mailMessage.setFrom(emailReq.getSenderEmail());
 		mailMessage.setTo("john.ebri@yahoo.com");
-		mailMessage.setSubject("New Feedback from " + feedback.getName());
-		mailMessage.setText(feedback.getFeedback());
+		mailMessage.setSubject("New Feedback from " + emailReq.getSenderName());
+		mailMessage.setText(emailReq.getMessage());
 		
 		// send mail
 		mailSender.send(mailMessage);
