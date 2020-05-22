@@ -51,7 +51,7 @@ public class VendorController {
 	private NotificationService notificationSvc;
 	
 	
-	@GetMapping("/hello")
+	@GetMapping("/")
 	public String hello() {
 		return "Now you have started";
 	}
