@@ -49,10 +49,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		return super.authenticationManagerBean();
 	}
 
-	@Bean
-	public PasswordEncoder getPasswordEncoder() {
-		return NoOpPasswordEncoder.getInstance();
-	}
+	/*
+	 * @Bean public PasswordEncoder getPasswordEncoder() { return
+	 * NoOpPasswordEncoder.getInstance(); }
+	 */
 	
 	
 	

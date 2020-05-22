@@ -7,6 +7,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.johnebri.foodvendorapp.auth.data.AuthenticationData;
@@ -51,7 +52,12 @@ public class AuthService {
 	UtilResponse utilResponse = new UtilResponse();
 	UtilStatus utilStatus = new UtilStatus();
 	
-	public UtilResponse setPassword(AuthenticationData newAuthData) {
+	@Autowired
+	private BCryptPasswordEncoder bCryptPasswordEncoder;
+	
+	
+	public UtilResponse setPassword(AuthenticationData newAuthData) {	
+		
 		
 		// check if email has already signed up as vendor or customer
 		if( vendorRepo.findByEmail(newAuthData.getEmail()) == null && 
@@ -98,6 +104,11 @@ public class AuthService {
 		newAuthData.setRole(ROLE);	
 		
 		// go ahead and create a password
+		
+		String encryptedPassword = 
+		bCryptPasswordEncoder.encode(newAuthData.getPassword());
+		
+		newAuthData.setPassword(encryptedPassword);		
 		
 		AuthenticationData authDataSaved = authRepo.save(newAuthData);
 		

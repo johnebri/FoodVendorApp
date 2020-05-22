@@ -32,14 +32,21 @@ public class JwtUtil {
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
-        final Claims claims = extractAllClaims(token);
-        return claimsResolver.apply(claims);
+    	try {
+    		final Claims claims = extractAllClaims(token);
+            return claimsResolver.apply(claims);
+    	} catch (Exception e) {
+    		// throw new Exception();
+    		return null;
+    	}
+    	
+        
     }
-    private Claims extractAllClaims(String token) {
-        return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
+    private Claims extractAllClaims(String token) {    	
+    	return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();		
     }
 
-    private Boolean isTokenExpired(String token) {
+    public Boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
 

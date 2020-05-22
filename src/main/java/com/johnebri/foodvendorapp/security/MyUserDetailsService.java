@@ -18,7 +18,7 @@ public class MyUserDetailsService implements UserDetailsService{
 	AuthenticationRepository authRepo;
 
 	@Override
-	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+	public UserDetails loadUserByUsername(String email) {
 
 		Optional<AuthenticationData> user = authRepo.findByEmail(email);
 		

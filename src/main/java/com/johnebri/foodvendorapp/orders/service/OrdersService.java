@@ -1,5 +1,6 @@
 package com.johnebri.foodvendorapp.orders.service;
 
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -151,17 +152,64 @@ public class OrdersService {
 		int id = utilSvc.getCustomerId(request);
 		Orders order = ordersRepo.findById(orderId);
 		
-		if(order == null) {
-			return utilSvc.createResponse(null, "400",
-					"No Order found");
-		}
+//		if(order == null) {
+//			return utilSvc.createResponse(null, "400",
+//					"No Order found");
+//		}
 		
 		// check if order belongs to customer making request
-		if(id != order.getCustomerId()) {
-			return utilSvc.createResponse(null, "400",
-					"Order does not belong to customer");
+//		if(id != order.getCustomerId()) {
+//			return utilSvc.createResponse(null, "400",
+//					"Order does not belong to customer");
+//		}
+		
+		// check if time after order is more than 10 minutes
+		
+		SimpleDateFormat sdfo = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		LocalDateTime now = LocalDateTime.now();
+		Date today = new Date();
+        String todaysDate = now.toString();
+        
+        String str = "abcdDCBA123";
+        String newDate = todaysDate.replace("T", " "); // strNew is 'bcdDCBA123'
+        
+        String orderDate = order.getDataAndTimeOfOrder().toString();
+        
+        System.out.println("Today : " + newDate);
+        System.out.println("Order : " + orderDate);
+        
+        //HH converts hour in 24 hours format (0-23), day calculation
+		
+	
+		Date d1 = null;
+		Date d2 = null;
+	
+		try {
+			d1 = format.parse(orderDate);
+			d2 = format.parse(newDate);
+	
+			//in milliseconds
+			long diff = d2.getTime() - d1.getTime();
+	
+			long diffSeconds = diff / 1000 % 60;
+			long diffMinutes = diff / (60 * 1000) % 60;
+			long diffHours = diff / (60 * 60 * 1000) % 24;
+			long diffDays = diff / (24 * 60 * 60 * 1000);
+			
+			
+	
+			System.out.println(diffDays + " days, ");
+			System.out.println(diffHours + " hours, ");
+			System.out.println(diffMinutes + " minutes, ");
+			System.out.println(diffSeconds + " seconds.");
+			System.out.println("diff " + diff);
+	
+		} catch (Exception e) {
+			System.out.println(e.getMessage());;
 		}
 		
+        	
 		
 		ordersRepo.setOrdersInfoById("cancelled", orderId);
 		
