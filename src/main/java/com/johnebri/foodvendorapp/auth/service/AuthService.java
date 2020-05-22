@@ -78,13 +78,13 @@ public class AuthService {
 		// check if email is vendor or customer
 		if(vendorRepo.findByEmail(newAuthData.getEmail()) != null) {
 			// found a vendor
-			ROLE = "VENDOR";
+			ROLE = "ROLE_VENDOR";
 			vendorFound = true;
 		}
 		
 		if(customerRepo.findByEmail(newAuthData.getEmail()) != null) {
 			// found a customer
-			ROLE = "CUSTOMER";
+			ROLE = "ROLE_CUSTOMER";
 			customerFound = true;
 		}	
 		
@@ -95,8 +95,7 @@ public class AuthService {
 			);
 		}
 		
-		newAuthData.setRole(ROLE);
-		
+		newAuthData.setRole(ROLE);	
 		
 		// go ahead and create a password
 		
