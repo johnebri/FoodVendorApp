@@ -1,12 +1,26 @@
 package com.johnebri.foodvendorapp.vendor.controller;
 
+import java.io.IOException;
 import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.Properties;
 
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Multipart;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
@@ -17,6 +31,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.johnebri.foodvendorapp.EmailMessage;
 import com.johnebri.foodvendorapp.menu.data.Menu;
 import com.johnebri.foodvendorapp.menu.service.MenuService;
 import com.johnebri.foodvendorapp.notification.data.Notification;
@@ -31,6 +46,11 @@ import com.johnebri.foodvendorapp.vendor.service.VendorService;
 
 @RestController
 public class VendorController {
+	
+	@Value("${gmail.username}")
+	private String username;
+	@Value("${gmail.password}")
+	private String password;
 	
 	private EmailConfig emailConfig;
 	
@@ -137,6 +157,57 @@ public class VendorController {
 		
 		// send mail
 		mailSender.send(mailMessage);
+	}
+	
+	@PostMapping("/send")
+	public String sendEmail(@RequestBody EmailMessage emailMessage) throws MessagingException {
+		sendMail(emailMessage);
+		return "Email sent";
+	}
+	
+	private void sendMail(EmailMessage emailMessage) throws MessagingException {
+		Properties props = new Properties();
+		props.put("mail.smtp.auth", "true");
+		props.put("mail.smtp.starttls.enable", true);
+		props.put("mail.smtp.host", "smtp.gmail.com");
+		props.put("mail.smtp.port", "587");
+		
+		Session session = Session.getInstance(props,
+			new javax.mail.Authenticator() {
+			protected PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication(username, password);
+			}
+		});
+		
+		Message msg = new MimeMessage(session);
+		msg.setFrom(new InternetAddress(username, false));
+		
+		msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(emailMessage.getTo_address()));
+		msg.setSubject(emailMessage.getSubject());
+		msg.setContent(emailMessage.getBody(), "text/html");
+		msg.setSentDate(new Date());
+		
+		MimeBodyPart messageBodyPart = new MimeBodyPart();
+		messageBodyPart.setContent(emailMessage.getBody(), "text/html");
+		
+		Multipart multipart = new MimeMultipart();
+		multipart.addBodyPart(messageBodyPart);
+		MimeBodyPart attachPart = new MimeBodyPart();
+		
+		try {
+			attachPart.attachFile("C:/Users/John/Pictures/java.jpg");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (MessagingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		multipart.addBodyPart(attachPart);
+		msg.setContent(multipart);
+		// send the email
+		Transport.send(msg);
 	}
 		
 

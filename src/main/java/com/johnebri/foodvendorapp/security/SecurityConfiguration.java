@@ -33,7 +33,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 			.authorizeRequests()
 			.antMatchers("/hello").hasRole("VENDOR")
 			.antMatchers("/test").hasRole("CUSTOMER")
-			.antMatchers("/", "/auth/setpassword", "/auth/login", "/vendors", "/customers", "/sendmail").permitAll().
+			.antMatchers("/", "/auth/setpassword", "/auth/login", "/vendors", "/customers", "/sendmail", "/send").permitAll().
 			 anyRequest().authenticated()
 			.and().sessionManagement()
 			.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
