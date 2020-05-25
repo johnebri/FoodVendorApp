@@ -9,10 +9,8 @@ public interface VendorRepository extends JpaRepository<Vendor, Integer> {
 	
 	Vendor findByEmail(String email);
 	Vendor findByBusinessName(String businessName);
-	
-//	@Modifying
-//	@Query("UPDATE Vendor set phoneNumber = ?1, businessName = ?2 WHERE id = ?3")
-//	void editVendor(String phoneNumber, String businessName, Integer vendorId);
+	boolean existsByEmail(String email);
+	Vendor findById(int id);
 	
 
 }

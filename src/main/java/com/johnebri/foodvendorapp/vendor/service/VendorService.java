@@ -1,5 +1,6 @@
 package com.johnebri.foodvendorapp.vendor.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -9,7 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.johnebri.foodvendorapp.customer.data.Customer;
+import com.johnebri.foodvendorapp.customer.repository.CustomerRepository;
+import com.johnebri.foodvendorapp.menu.data.Menu;
+import com.johnebri.foodvendorapp.menu.repository.MenuRepository;
 import com.johnebri.foodvendorapp.orders.data.Orders;
+import com.johnebri.foodvendorapp.orders.data.ShowOrdersResponse;
 import com.johnebri.foodvendorapp.orders.repository.OrdersRepository;
 import com.johnebri.foodvendorapp.util.data.UtilResponse;
 import com.johnebri.foodvendorapp.util.data.UtilStatus;
@@ -25,6 +31,12 @@ public class VendorService {
 	
 	@Autowired
 	private OrdersRepository ordersRepo;
+	
+	@Autowired
+	private MenuRepository menuRepo;
+	
+	@Autowired
+	private CustomerRepository customerRepo;
 	
 	@Autowired 
 	UtilService utilSvc;
@@ -54,7 +66,8 @@ public class VendorService {
 		
 		// send email to vendor
 		try {
-			utilSvc.sendEmail(vendor.getEmail(), "Welcome Vendor", "Welcome to FoodVendorApp. Click Here to set up your password");
+			String message = "<h1>Welcome</h1> <h3>Welcome to FoodVendorApp. Click Here to set up your password</h3>";
+			utilSvc.sendMail(vendor.getEmail(), "Welcome Vendor", message);
 		} catch (Exception e) {
 			System.out.println("You are not connected to the internet, you will not receive a mail");
 		}
@@ -70,7 +83,7 @@ public class VendorService {
 		
 	}
 	
-	public Optional<Vendor> getVendor(int id) {
+	public Vendor getVendor(int id) {
 		
 		return vendorRepo.findById(id);
 		
@@ -79,8 +92,8 @@ public class VendorService {
 	public ResponseEntity<Vendor> editVendor(Vendor newVendorDetails, int id) {		
 		
 		// find the vendor		
-		Optional<Vendor> currentVendor = vendorRepo.findById(id);
-		if(!currentVendor.isPresent()) {
+		Vendor currentVendor = vendorRepo.findById(id);
+		if(currentVendor != null) {
 			// vendor does not exist
 			return ResponseEntity.notFound().build();
 		}
@@ -91,9 +104,35 @@ public class VendorService {
 		return ResponseEntity.ok().body(updatedVendor);
 	}
 	
-	public List<Orders> viewOrders(HttpServletRequest request) {
+	public List<ShowOrdersResponse> viewOrders(HttpServletRequest request) {
 		int id = utilSvc.getVendorId(request);
-		return ordersRepo.findByVendorId(id);
+
+		List<Orders> orders = ordersRepo.findByVendorId(id);
+		
+		List<ShowOrdersResponse> showOrdersResponse = new ArrayList<>();
+		
+		for(int x=0; x<orders.size(); x++) {
+			ShowOrdersResponse resp = new ShowOrdersResponse();
+			resp.setOrderId(orders.get(x).getId());
+			
+			// get customer name
+			Customer customer = customerRepo.findById(orders.get(x).getCustomerId());
+			resp.setCustomer(customer.getFirstname() + " " + customer.getLastname());
+			
+			// get menu name
+			Menu menu = menuRepo.findById(orders.get(x).getMenuId());
+			resp.setMenu(menu.getName());
+			resp.setAmountDue(orders.get(x).getAmountDue());
+			resp.setAmountPaid(orders.get(x).getAmountPaid());
+			resp.setAmountOutstanding(orders.get(x).getAmountOutstanding());
+			resp.setOrderStatus(orders.get(x).getOrderStatus());
+			resp.setDateNeeded(orders.get(x).getDateNeeded().toString());
+			resp.setDateAndTimeOfOrder(orders.get(x).getDataAndTimeOfOrder().toString());
+			
+			showOrdersResponse.add(resp);
+		}
+		
+		return showOrdersResponse;
 		
 	}
 

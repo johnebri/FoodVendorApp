@@ -3,6 +3,7 @@ package com.johnebri.foodvendorapp.auth.service;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -53,11 +54,9 @@ public class AuthService {
 	UtilStatus utilStatus = new UtilStatus();
 	
 	@Autowired
-	private BCryptPasswordEncoder bCryptPasswordEncoder;
+	private BCryptPasswordEncoder bCryptPasswordEncoder;	
 	
-	
-	public UtilResponse setPassword(AuthenticationData newAuthData) {	
-		
+	public UtilResponse setPassword(AuthenticationData newAuthData) {		
 		
 		// check if email has already signed up as vendor or customer
 		if( vendorRepo.findByEmail(newAuthData.getEmail()) == null && 
@@ -114,7 +113,8 @@ public class AuthService {
 		
 		// send email to vendor/customer
 		try {
-			utilSvc.sendEmail(newAuthData.getEmail(), "Welcome Vendor", "You have successfully setup your password");
+			// utilSvc.sendEmail(newAuthData.getEmail(), "Welcome Vendor", "You have successfully setup your password");
+			utilSvc.sendMail(newAuthData.getEmail(), "Welcome Vendor", "You have successfully setup your password. Click here to login to your account");
 		} catch (Exception e) {
 			System.out.println("You are not connected to the internet, you will not receive a mail");
 		}
@@ -141,6 +141,14 @@ public class AuthService {
 		final String jwt = jwtTokenUtil.generateToken(userDetails);
 		
 		// send email to vendor/customer
+		
+		try {
+			String message = "<h1>Login Success</h1> <p>A new Login has been detected on your account."
+					+ "If you did not initiate this login, Please send a mail to jaysfoodcart@gmail.com immediately.";
+			utilSvc.sendMail(authRequest.getEmail(), "New Login", message);
+		} catch (Exception e) {
+			System.out.println("You are not connected to the internet, you will not receive a mail");
+		}
 		
 		return utilSvc.createResponse( new AuthenticationResponse(jwt), "200", 
 				"You login was successful"

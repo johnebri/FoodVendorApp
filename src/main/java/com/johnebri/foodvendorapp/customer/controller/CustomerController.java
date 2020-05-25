@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.johnebri.foodvendorapp.customer.data.Customer;
 import com.johnebri.foodvendorapp.customer.service.CustomerService;
+import com.johnebri.foodvendorapp.menu.data.AvailableMenuResponse;
 import com.johnebri.foodvendorapp.menu.data.Menu;
 import com.johnebri.foodvendorapp.notification.data.Notification;
 import com.johnebri.foodvendorapp.notification.service.NotificationService;
@@ -35,8 +36,6 @@ public class CustomerController {
 	@Autowired
 	NotificationService notificationSvc;
 	
-	
-	
 	@PostMapping("/customers")
 	public UtilResponse customerSignup(@RequestBody Customer customer) {
 		return customerSvc.save(customer);
@@ -48,12 +47,12 @@ public class CustomerController {
 	}
 	
 	@GetMapping("/customers/{customerId}")
-	public Optional<Customer> getCustomer(@PathVariable(value="customerId") int id) {
+	public List<Customer> getCustomer(@PathVariable(value="customerId") int id) {
 		return customerSvc.getCustomer(id);
 	}
 	
 	@GetMapping("/customers/menu")
-	public List<Menu> test() {
+	public List<AvailableMenuResponse> test() {
 		return ordersSvc.getAllMenu();
 	}
 	

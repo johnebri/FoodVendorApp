@@ -6,6 +6,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.johnebri.foodvendorapp.menu.data.AvailableMenuResponse;
 import com.johnebri.foodvendorapp.menu.data.Menu;
 import com.johnebri.foodvendorapp.menu.repository.MenuRepository;
 import com.johnebri.foodvendorapp.orders.data.Orders;
@@ -43,8 +45,32 @@ public class OrdersService {
 	private UtilService utilSvc;
 	
 	
-	public List<Menu> getAllMenu() {
-		return menuRepo.findAll();
+	public List<AvailableMenuResponse> getAllMenu() {
+		
+		List<Menu> menus = menuRepo.findAll();
+		List<AvailableMenuResponse> availableMenuResponse = new ArrayList<>();
+		
+		for(int x=0; x<menus.size(); x++) {
+			AvailableMenuResponse resp = new AvailableMenuResponse();
+			
+			 resp.setId(menus.get(x).getId());
+		     resp.setName(menus.get(x).getName());
+		     resp.setDescription(menus.get(x).getDescription());
+		     resp.setPrice(menus.get(x).getPrice());
+		     resp.setQuantity(menus.get(x).getQuantity());
+		     
+		     // get vendor
+		     Vendor searchedVendor = vendorRepo.findById(menus.get(x).getVendorId());
+		     resp.setVendor(searchedVendor.getBusinessName());
+		     
+		     resp.setIsRecurring(menus.get(x).getIsRecurring().toString());
+		     resp.setFrequencyOfRecurrence(menus.get(x).getFrequencyOfRecurrence());
+		     resp.setDateTimeCreated(menus.get(x).getDateTimeCreated().toString());
+			
+			availableMenuResponse.add(resp);
+		}
+		
+		return availableMenuResponse;
 	}
 	
 	public UtilResponse makeOrder(HttpServletRequest request, Orders order) throws ParseException {
@@ -55,8 +81,8 @@ public class OrdersService {
 		
 		// check if vendor exist
 		int vendorId = order.getVendorId();
-		Optional<Vendor> vendor = vendorRepo.findById(vendorId);
-		if(!vendor.isPresent()) {
+		Vendor vendor = vendorRepo.findById(vendorId);
+		if(vendor != null) {
 			// vendor does not exist
 			return utilSvc.createResponse(null, "400",
 				"Vendor does not exist"
@@ -171,8 +197,7 @@ public class OrdersService {
 		Date today = new Date();
         String todaysDate = now.toString();
         
-        String str = "abcdDCBA123";
-        String newDate = todaysDate.replace("T", " "); // strNew is 'bcdDCBA123'
+        String newDate = todaysDate.replace("T", " ");
         
         String orderDate = order.getDataAndTimeOfOrder().toString();
         
@@ -180,10 +205,11 @@ public class OrdersService {
         System.out.println("Order : " + orderDate);
         
         //HH converts hour in 24 hours format (0-23), day calculation
-		
 	
 		Date d1 = null;
 		Date d2 = null;
+		
+		long diffSeconds = 0, diffMinutes = 0, diffHours = 0, diffDays = 0;
 	
 		try {
 			d1 = format.parse(orderDate);
@@ -192,12 +218,10 @@ public class OrdersService {
 			//in milliseconds
 			long diff = d2.getTime() - d1.getTime();
 	
-			long diffSeconds = diff / 1000 % 60;
-			long diffMinutes = diff / (60 * 1000) % 60;
-			long diffHours = diff / (60 * 60 * 1000) % 24;
-			long diffDays = diff / (24 * 60 * 60 * 1000);
-			
-			
+			diffSeconds = diff / 1000 % 60;
+			diffMinutes = diff / (60 * 1000) % 60;
+			diffHours = diff / (60 * 60 * 1000) % 24;
+			diffDays = diff / (24 * 60 * 60 * 1000);
 	
 			System.out.println(diffDays + " days, ");
 			System.out.println(diffHours + " hours, ");
@@ -209,14 +233,22 @@ public class OrdersService {
 			System.out.println(e.getMessage());;
 		}
 		
-        	
-		
-		ordersRepo.setOrdersInfoById("cancelled", orderId);
-		
-		
-		return utilSvc.createResponse(null, "200",
-				"Order Cancelled Successfully");
-		
+		if (diffDays < 1 || diffHours > 1) {
+			// check minutes
+			if (diffMinutes > 10) {
+				// order cannot be cancelled
+				return utilSvc.createResponse(null, "400",
+						"You cannot cancel an order after 10 minutes");
+			} else {
+				// cancel order
+				ordersRepo.setOrdersInfoById("cancelled", orderId);
+				return utilSvc.createResponse(null, "200",
+						"Order Cancelled Successfully");
+			}
+		} else {
+			return utilSvc.createResponse(null, "400",
+					"You cannot cancel an order after 10 minutes");
+		}
 	}
 	
 	@Transactional
@@ -305,7 +337,6 @@ public class OrdersService {
         String todaysDate = now.toString();
         Date orderDate = sdfo.parse(todaysDate);
   
-		System.out.println(now);
 		
 		DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		Date today = new Date();

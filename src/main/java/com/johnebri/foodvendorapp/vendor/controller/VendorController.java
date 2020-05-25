@@ -31,32 +31,19 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.johnebri.foodvendorapp.EmailMessage;
 import com.johnebri.foodvendorapp.menu.data.Menu;
 import com.johnebri.foodvendorapp.menu.service.MenuService;
 import com.johnebri.foodvendorapp.notification.data.Notification;
 import com.johnebri.foodvendorapp.notification.service.NotificationService;
 import com.johnebri.foodvendorapp.orders.data.Orders;
+import com.johnebri.foodvendorapp.orders.data.ShowOrdersResponse;
 import com.johnebri.foodvendorapp.orders.service.OrdersService;
-import com.johnebri.foodvendorapp.util.data.EmailRequest;
 import com.johnebri.foodvendorapp.util.data.UtilResponse;
-import com.johnebri.foodvendorapp.util.service.EmailConfig;
 import com.johnebri.foodvendorapp.vendor.data.Vendor;
 import com.johnebri.foodvendorapp.vendor.service.VendorService;
 
 @RestController
 public class VendorController {
-	
-	@Value("${gmail.username}")
-	private String username;
-	@Value("${gmail.password}")
-	private String password;
-	
-	private EmailConfig emailConfig;
-	
-	public VendorController(EmailConfig emailConfig) {
-		this.emailConfig = emailConfig;
-	}
 	
 	@Autowired
 	private VendorService vendorSvc;
@@ -90,7 +77,7 @@ public class VendorController {
 	
 	// get a vendor
 	@GetMapping("/vendors/{vendorId}")
-	public Optional<Vendor> getVendor(@PathVariable(value="vendorId") int id, HttpServletRequest request) {
+	public Vendor getVendor(@PathVariable(value="vendorId") int id, HttpServletRequest request) {
 		return vendorSvc.getVendor(id);
 	}	
 	
@@ -116,7 +103,7 @@ public class VendorController {
 	}	
 	
 	@GetMapping("/vendors/orders")
-	public List<Orders> viewOrders(HttpServletRequest request) {
+	public List<ShowOrdersResponse> viewOrders(HttpServletRequest request) {
 		return vendorSvc.viewOrders(request);		
 	}
 	
@@ -136,78 +123,6 @@ public class VendorController {
 			@RequestBody Notification notification, 
 			@PathVariable(value="orderId") int orderId ) {
 		return notificationSvc.sendNotification(request, notification, orderId);
-	}
-	
-	@PostMapping("/sendmail")
-	public void sendMail(@RequestBody EmailRequest emailReq) {
-		// create a mail sender
-		JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-		mailSender.setHost(this.emailConfig.getHost());
-		mailSender.setPort(this.emailConfig.getPort());
-		mailSender.setUsername(this.emailConfig.getUsername());
-		mailSender.setPassword(this.emailConfig.getPassword());
-	
-		// create an email instance
-		SimpleMailMessage mailMessage = new SimpleMailMessage();
-	
-		mailMessage.setFrom(emailReq.getSenderEmail());
-		mailMessage.setTo("john.ebri@yahoo.com");
-		mailMessage.setSubject("New Feedback from " + emailReq.getSenderName());
-		mailMessage.setText(emailReq.getMessage());
-		
-		// send mail
-		mailSender.send(mailMessage);
-	}
-	
-	@PostMapping("/send")
-	public String sendEmail(@RequestBody EmailMessage emailMessage) throws MessagingException {
-		sendMail(emailMessage);
-		return "Email sent";
-	}
-	
-	private void sendMail(EmailMessage emailMessage) throws MessagingException {
-		Properties props = new Properties();
-		props.put("mail.smtp.auth", "true");
-		props.put("mail.smtp.starttls.enable", true);
-		props.put("mail.smtp.host", "smtp.gmail.com");
-		props.put("mail.smtp.port", "587");
-		
-		Session session = Session.getInstance(props,
-			new javax.mail.Authenticator() {
-			protected PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication(username, password);
-			}
-		});
-		
-		Message msg = new MimeMessage(session);
-		msg.setFrom(new InternetAddress(username, false));
-		
-		msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(emailMessage.getTo_address()));
-		msg.setSubject(emailMessage.getSubject());
-		msg.setContent(emailMessage.getBody(), "text/html");
-		msg.setSentDate(new Date());
-		
-		MimeBodyPart messageBodyPart = new MimeBodyPart();
-		messageBodyPart.setContent(emailMessage.getBody(), "text/html");
-		
-		Multipart multipart = new MimeMultipart();
-		multipart.addBodyPart(messageBodyPart);
-		MimeBodyPart attachPart = new MimeBodyPart();
-		
-		try {
-			attachPart.attachFile("C:/Users/John/Pictures/java.jpg");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (MessagingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		multipart.addBodyPart(attachPart);
-		msg.setContent(multipart);
-		// send the email
-		Transport.send(msg);
 	}
 		
 
