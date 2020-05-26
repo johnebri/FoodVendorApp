@@ -49,6 +49,14 @@ public class MenuService {
 		int id = utilSvc.getVendorId(request);
 		int menuId = newMenu.getId();
 		Menu searchedMenu = menuRepo.findById(menuId);
+		
+		// check if menu exist
+		if(searchedMenu == null) {
+			return utilSvc.createResponse(null, "400", 
+				"Menu does not exist");
+
+		}
+		
 		if(searchedMenu.getVendorId() != id) {
 			// menu does not belong to vendor
 			return utilSvc.createResponse(null, "400", 

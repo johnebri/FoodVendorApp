@@ -19,14 +19,14 @@ public interface OrdersRepository extends JpaRepository<Orders, Integer>{
 	void setOrdersInfoById(String status, int id);
 	
 	@Modifying
-	@Query("UPDATE Orders set order_status = ?1 WHERE id = ?2")
+	@Query("UPDATE Orders set order_status = ?1, amountOutstanding = 0 WHERE id = ?2")
 	void payForOrder(String status, int id);
 	
 	@Modifying
 	@Query("UPDATE Orders set order_status = ?1 WHERE id = ?2")
 	void vendorUpdateOrderStatus(String status, int id);
 	
-	@Query(value = "SELECT * FROM Orders o WHERE o.vendor_id = ?1 AND o.date_needed = ?2", nativeQuery = true)	
+	@Query(value = "SELECT * FROM Orders o WHERE o.vendor_id = ?1 AND o.date_needed = ?2 AND o.order_status='paid'", nativeQuery = true)	
 	List<Orders> getVendorOrders(int vendorId, String string); 
 
 }

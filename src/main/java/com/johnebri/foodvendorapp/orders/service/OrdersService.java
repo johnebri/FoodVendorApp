@@ -17,10 +17,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.johnebri.foodvendorapp.customer.data.Customer;
+import com.johnebri.foodvendorapp.customer.repository.CustomerRepository;
 import com.johnebri.foodvendorapp.menu.data.AvailableMenuResponse;
 import com.johnebri.foodvendorapp.menu.data.Menu;
 import com.johnebri.foodvendorapp.menu.repository.MenuRepository;
 import com.johnebri.foodvendorapp.orders.data.Orders;
+import com.johnebri.foodvendorapp.orders.data.PaymentRequest;
+import com.johnebri.foodvendorapp.orders.data.VendorReportResponse;
 import com.johnebri.foodvendorapp.orders.repository.OrdersRepository;
 import com.johnebri.foodvendorapp.util.data.UtilResponse;
 import com.johnebri.foodvendorapp.util.service.UtilService;
@@ -42,6 +46,9 @@ public class OrdersService {
 	private VendorRepository vendorRepo;
 	
 	@Autowired
+	private CustomerRepository customerRepo;
+	
+	@Autowired
 	private UtilService utilSvc;
 	
 	
@@ -52,6 +59,10 @@ public class OrdersService {
 		
 		for(int x=0; x<menus.size(); x++) {
 			AvailableMenuResponse resp = new AvailableMenuResponse();
+				
+			// check if vendor of menu exists
+			if(vendorRepo.findById(menus.get(x).getVendorId()) == null)
+				continue;
 			
 			 resp.setId(menus.get(x).getId());
 		     resp.setName(menus.get(x).getName());
@@ -82,7 +93,7 @@ public class OrdersService {
 		// check if vendor exist
 		int vendorId = order.getVendorId();
 		Vendor vendor = vendorRepo.findById(vendorId);
-		if(vendor != null) {
+		if(vendor == null) {
 			// vendor does not exist
 			return utilSvc.createResponse(null, "400",
 				"Vendor does not exist"
@@ -138,7 +149,8 @@ public class OrdersService {
         } 
 		
 		double menuPrice = menu.getPrice();
-		order.setAmountDue(menuPrice);		
+		order.setAmountDue(menuPrice);	
+		order.setAmountOutstanding(menuPrice);
 		
 		ordersRepo.save(order);	
 		
@@ -252,7 +264,12 @@ public class OrdersService {
 	}
 	
 	@Transactional
-	public UtilResponse payForOrder(HttpServletRequest request, int orderId) {
+	public UtilResponse payForOrder(HttpServletRequest request, int orderId, PaymentRequest paymentRequest) {
+		
+		if(paymentRequest.getAmount() < 100) {
+			return utilSvc.createResponse(null, "400",
+					"Amount to pay must be upto N100");
+		}
 		
 		// check if order exist 
 		int id = utilSvc.getCustomerId(request);
@@ -269,18 +286,25 @@ public class OrdersService {
 					"Order does not belong to customer");
 		}
 		
-		// check status or order	
+		// check if user has cancelled the order
 		String orderStatus = order.getOrderStatus();
 		
 		if(orderStatus.equals("cancelled")) {
-			return utilSvc.createResponse(null, "200",
+			return utilSvc.createResponse(null, "400",
 					"You cannot pay for an order you have cancelled");
 		}
 		
+		// check if user has already paid for order
 		if(orderStatus.equals("paid")) {
-			return utilSvc.createResponse(null, "200",
+			return utilSvc.createResponse(null, "400",
 					"You have already paid for this order");
-		}		
+		}	
+		
+		// compare amount to pay and cost of order
+		if(paymentRequest.getAmount() != order.getAmountDue()) {
+			return utilSvc.createResponse(null, "400",
+					"Amount to pay must match cost of order. Cost of order is " + order.getAmountDue());
+		}
 		
 		ordersRepo.payForOrder("paid", orderId);		
 		
@@ -319,34 +343,44 @@ public class OrdersService {
 //					"You have already paid for this order");
 //		}	
 		
-		ordersRepo.vendorUpdateOrderStatus("delivered", orderId);
+		ordersRepo.vendorUpdateOrderStatus("READY", orderId);
 		return utilSvc.createResponse(null, "200",
 				"Order updated successfully");
 		
 	}
 	
-	public List<Orders> dailySalesReport(HttpServletRequest request) throws ParseException {
+	public List<VendorReportResponse> dailySalesReport(HttpServletRequest request) throws ParseException {
 		
 		// get vendor id
 		int id = utilSvc.getVendorId(request);
-		
-		// get todays date
-		LocalDateTime now = LocalDateTime.now();
-		
-		SimpleDateFormat sdfo = new SimpleDateFormat("yyyy-MM-dd");
-        String todaysDate = now.toString();
-        Date orderDate = sdfo.parse(todaysDate);
-  
-		
-		DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-		Date today = new Date();
-		Date todayWithZeroTime = formatter.parse(formatter.format(today));
-		
-		System.out.println("Date without time : " + todayWithZeroTime);
-		
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		System.out.println(dateFormat.format(new Date()));
 		
-		return ordersRepo.getVendorOrders(id, dateFormat.format(new Date()));
+		List<Orders> orders = ordersRepo.getVendorOrders(id, dateFormat.format(new Date()));
+		List<VendorReportResponse> vendorReportResponse = new ArrayList<>();
+		
+		for(int x=0; x<orders.size(); x++) {
+			VendorReportResponse resp = new VendorReportResponse();
+			resp.setId(orders.get(x).getId());
+			
+			// get customer
+			Customer customer = customerRepo.findById(orders.get(x).getCustomerId());
+			resp.setCustomer(customer.getFirstname() + " " + customer.getLastname());
+			
+			// get Menu
+			Menu menu = menuRepo.findById(orders.get(x).getMenuId());
+			resp.setMenu(menu.getName());
+			
+			resp.setDescription(orders.get(x).getDescription());
+			resp.setAmountDue(orders.get(x).getAmountDue());
+			resp.setAmountPaid(orders.get(x).getAmountPaid());
+			resp.setAmountOutstanding(orders.get(x).getAmountOutstanding());
+			resp.setOrderStatus(orders.get(x).getOrderStatus());
+			resp.setDateNeeded(orders.get(x).getDateNeeded().toString());
+			resp.setDataAndTimeOfOrder(orders.get(x).getDateNeeded().toString());
+			
+			vendorReportResponse.add(resp);
+		}
+		
+		return vendorReportResponse;
 	}
 }

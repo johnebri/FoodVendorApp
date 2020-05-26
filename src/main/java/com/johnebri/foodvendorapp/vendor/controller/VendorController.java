@@ -37,6 +37,7 @@ import com.johnebri.foodvendorapp.notification.data.Notification;
 import com.johnebri.foodvendorapp.notification.service.NotificationService;
 import com.johnebri.foodvendorapp.orders.data.Orders;
 import com.johnebri.foodvendorapp.orders.data.ShowOrdersResponse;
+import com.johnebri.foodvendorapp.orders.data.VendorReportResponse;
 import com.johnebri.foodvendorapp.orders.service.OrdersService;
 import com.johnebri.foodvendorapp.util.data.UtilResponse;
 import com.johnebri.foodvendorapp.vendor.data.Vendor;
@@ -113,7 +114,7 @@ public class VendorController {
 	}
 	
 	@GetMapping("/vendors/report")
-	public List<Orders> dailySalesReport(HttpServletRequest request) throws ParseException {
+	public List<VendorReportResponse> dailySalesReport(HttpServletRequest request) throws ParseException {
 		return ordersSvc.dailySalesReport(request);
 	}
 	

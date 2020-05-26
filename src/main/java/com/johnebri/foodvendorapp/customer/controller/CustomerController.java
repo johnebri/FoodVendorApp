@@ -21,6 +21,7 @@ import com.johnebri.foodvendorapp.menu.data.Menu;
 import com.johnebri.foodvendorapp.notification.data.Notification;
 import com.johnebri.foodvendorapp.notification.service.NotificationService;
 import com.johnebri.foodvendorapp.orders.data.Orders;
+import com.johnebri.foodvendorapp.orders.data.PaymentRequest;
 import com.johnebri.foodvendorapp.orders.service.OrdersService;
 import com.johnebri.foodvendorapp.util.data.UtilResponse;
 
@@ -77,8 +78,9 @@ public class CustomerController {
 	}
 	
 	@PutMapping("/customers/orders/{orderId}/pay")
-	public UtilResponse payForOrder(HttpServletRequest request, @PathVariable(value="orderId") int id) {
-		return ordersSvc.payForOrder(request, id);
+	public UtilResponse payForOrder(HttpServletRequest request, @PathVariable(value="orderId") int id,
+			@RequestBody PaymentRequest paymentRequest) {
+		return ordersSvc.payForOrder(request, id, paymentRequest);
 	}
 	
 	@GetMapping("/customers/notifications")

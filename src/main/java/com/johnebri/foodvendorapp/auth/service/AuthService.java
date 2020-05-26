@@ -114,7 +114,7 @@ public class AuthService {
 		// send email to vendor/customer
 		try {
 			// utilSvc.sendEmail(newAuthData.getEmail(), "Welcome Vendor", "You have successfully setup your password");
-			utilSvc.sendMail(newAuthData.getEmail(), "Welcome Vendor", "You have successfully setup your password. Click here to login to your account");
+			utilSvc.sendMail(newAuthData.getEmail(), "Welcome Vendor", "You have successfully setup your password. Click (linkToLogin) to login to your account");
 		} catch (Exception e) {
 			System.out.println("You are not connected to the internet, you will not receive a mail");
 		}

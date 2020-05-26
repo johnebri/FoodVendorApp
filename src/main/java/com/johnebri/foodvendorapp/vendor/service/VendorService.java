@@ -66,7 +66,7 @@ public class VendorService {
 		
 		// send email to vendor
 		try {
-			String message = "<h1>Welcome</h1> <h3>Welcome to FoodVendorApp. Click Here to set up your password</h3>";
+			String message = "<h1>Welcome</h1> <h3>Welcome to FoodVendorApp. Click (linkToSetupPassword) to set up your password</h3>";
 			utilSvc.sendMail(vendor.getEmail(), "Welcome Vendor", message);
 		} catch (Exception e) {
 			System.out.println("You are not connected to the internet, you will not receive a mail");
