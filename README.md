@@ -24,3 +24,8 @@ For building and running the application you need:
 ## Running the application online
 The application is hosted on https://john-foodvendorapp.herokuapp.com/
 
+## Note
+At login, a token is generated that must be used in every other subsequent request. In the Headers tab on postman, add key of Authorization and value of Bearer {token}. 
+
+![Postman](https://res.cloudinary.com/dxi6ee9zf/image/upload/v1590460175/Capture_mdjsbg.jpg)
+
