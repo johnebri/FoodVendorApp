@@ -1,5 +1,9 @@
 # Food Vendor App API
 
+[![Build Status](https://travis-ci.org/johnebri/FoodVendorApp.svg?branch=master)](https://travis-ci.org/johnebri/FoodVendorApp)
+[![Coverage Status](https://coveralls.io/repos/github/johnebri/FoodVendorApp/badge.svg?branch=master)](https://coveralls.io/github/johnebri/FoodVendorApp?branch=master)
+[![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
+
 ## Requirements
 
 For building and running the application you need:
@@ -8,13 +12,12 @@ For building and running the application you need:
 - [MySQL](https://https://dev.mysql.com/downloads/installer/)
 
 ## Running the application locally
-1. Create a MySQL database "food-vendor-app"
-
-This will create:
-
-* An ImageStream called "springboot-maven3-centos"
-* An ImageStream called "springboot-sample-app"
-* A BuildConfig called "springboot-sample-app"
-* DeploymentConfig called "springboot-sample-app"
-* Service called "springboot-sample-app"
+1. Clone this repo into your computer
+1. Create a MySQL database "food-vendor-app
+3. Open project directory in a terminal
+4. Run the command 
+  a(for Windows users) mvnw spring-boot:run
+  b(for MacOS/Linux users) ./mvnw spring-boot:run
+5. Application is started on http://localhost:8080
+6. If port 8080 is already used by another application in your computer, open the application.properties file and change port with 'server.port=8181'
 
