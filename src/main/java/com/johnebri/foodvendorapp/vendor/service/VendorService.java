@@ -49,11 +49,18 @@ public class VendorService {
 		Vendor vendorEmailSearchRes = vendorRepo.findByEmail(vendor.getEmail());
 		Vendor vendorBusinessSearchRes = vendorRepo.findByBusinessName(vendor.getBusinessName());
 		
+		if(vendor.getEmail().length() < 6 || vendor.getBusinessName().length() < 5 || vendor.getPhoneNumber().length() < 11) {
+			return utilSvc.createResponse(
+					null, 
+					"400", "Error: Fill in the fields correctly"
+			);
+		}
+		
 		if(vendorEmailSearchRes != null) {
 			// email is already in use
 			return utilSvc.createResponse(
 					null, 
-					"400", "Email is name is already in use. Please use a different email"
+					"400", "Email is already in use. Please use a different email"
 			);
 		}
 		

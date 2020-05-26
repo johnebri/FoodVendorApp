@@ -30,6 +30,12 @@ public class CustomerService {
 	
 	public UtilResponse save(Customer newCustomer) {
 		
+		// check if fields are empty
+		if(newCustomer.getFirstname().length()<2 || newCustomer.getLastname().length() < 2 || 
+				newCustomer.getEmail().length() < 6 || newCustomer.getPhoneNumber().length() < 11) {
+			return utilService.createResponse(null, "400", "Error: Fill in the fields correctly");
+		}
+		
 		// check if email already exists
 		if( customerRepo.findByEmail(newCustomer.getEmail()) != null || vendorRepo.existsByEmail(newCustomer.getEmail()) ) {
 			// customer already exist with this email
@@ -51,7 +57,7 @@ public class CustomerService {
 			System.out.println("You are not connected to the internet, you will not receive a mail");
 		}
 		
-		
+		// everything is fine, save customer
 		Customer customer = customerRepo.save(newCustomer);
 		return utilService.createResponse(customer, "200", 
 				"Registration was successful. An email sent to (" + newCustomer.getEmail() + ") contains instructions to set your password");
