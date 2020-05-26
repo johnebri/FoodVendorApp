@@ -21,3 +21,6 @@ For building and running the application you need:
 5. Application is started on http://localhost:8080
 6. If port 8080 is already used by another application in your computer, open the application.properties file and change port with 'server.port=8181'
 
+## Running the application online
+The application is hosted on https://john-foodvendorapp.herokuapp.com/
+
