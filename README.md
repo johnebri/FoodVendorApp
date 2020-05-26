@@ -16,8 +16,8 @@ For building and running the application you need:
 1. Create a MySQL database "food-vendor-app
 3. Open project directory in a terminal
 4. Run the command 
-  a(for Windows users) mvnw spring-boot:run
-  b(for MacOS/Linux users) ./mvnw spring-boot:run
+  (for Windows users) mvnw spring-boot:run
+  (for MacOS/Linux users) ./mvnw spring-boot:run
 5. Application is started on http://localhost:8080
 6. If port 8080 is already used by another application in your computer, open the application.properties file and change port with 'server.port=8181'
 
