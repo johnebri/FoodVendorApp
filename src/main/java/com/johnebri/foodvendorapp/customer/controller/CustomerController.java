@@ -2,7 +2,6 @@ package com.johnebri.foodvendorapp.customer.controller;
 
 import java.text.ParseException;
 import java.util.List;
-import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.johnebri.foodvendorapp.customer.data.Customer;
 import com.johnebri.foodvendorapp.customer.service.CustomerService;
 import com.johnebri.foodvendorapp.menu.data.AvailableMenuResponse;
-import com.johnebri.foodvendorapp.menu.data.Menu;
 import com.johnebri.foodvendorapp.notification.data.Notification;
 import com.johnebri.foodvendorapp.notification.service.NotificationService;
 import com.johnebri.foodvendorapp.orders.data.Orders;

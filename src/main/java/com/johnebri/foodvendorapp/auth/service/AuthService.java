@@ -3,7 +3,6 @@ package com.johnebri.foodvendorapp.auth.service;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import com.johnebri.foodvendorapp.auth.data.AuthenticationData;
 import com.johnebri.foodvendorapp.auth.repository.AuthenticationRepository;
-import com.johnebri.foodvendorapp.customer.data.Customer;
 import com.johnebri.foodvendorapp.customer.repository.CustomerRepository;
 import com.johnebri.foodvendorapp.security.AuthenticationResponse;
 import com.johnebri.foodvendorapp.security.JwtUtil;
@@ -21,7 +19,6 @@ import com.johnebri.foodvendorapp.security.MyUserDetailsService;
 import com.johnebri.foodvendorapp.util.data.UtilResponse;
 import com.johnebri.foodvendorapp.util.data.UtilStatus;
 import com.johnebri.foodvendorapp.util.service.UtilService;
-import com.johnebri.foodvendorapp.vendor.data.Vendor;
 import com.johnebri.foodvendorapp.vendor.repository.VendorRepository;
 
 @Service

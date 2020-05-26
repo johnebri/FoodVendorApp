@@ -1,29 +1,11 @@
 package com.johnebri.foodvendorapp.vendor.controller;
 
-import java.io.IOException;
 import java.text.ParseException;
-import java.util.Date;
 import java.util.List;
-import java.util.Optional;
-import java.util.Properties;
-
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Multipart;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,7 +17,6 @@ import com.johnebri.foodvendorapp.menu.data.Menu;
 import com.johnebri.foodvendorapp.menu.service.MenuService;
 import com.johnebri.foodvendorapp.notification.data.Notification;
 import com.johnebri.foodvendorapp.notification.service.NotificationService;
-import com.johnebri.foodvendorapp.orders.data.Orders;
 import com.johnebri.foodvendorapp.orders.data.ShowOrdersResponse;
 import com.johnebri.foodvendorapp.orders.data.VendorReportResponse;
 import com.johnebri.foodvendorapp.orders.service.OrdersService;
@@ -64,7 +45,7 @@ public class VendorController {
 		return (
 				"<h1 style=text-align:center;>Welcome to FoodVendorApp RESTApi</h1>"
 				+ "<center>"
-				+ "<a href=https://documenter.getpostman.com/view/9082520/SztA7Udc?version=latest"
+				+ "<a href='https://documenter.getpostman.com/view/9082520/SztA7Udc?version=latest'"
 				+ "<button style=background:#6CA76E;color:white;padding:12px;text-decoration:none;>Go to Documentation</button></a></center>"	
 		);
 	}
