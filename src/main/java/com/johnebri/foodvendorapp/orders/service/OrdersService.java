@@ -350,8 +350,10 @@ public class OrdersService {
 		// get vendor id
 		int id = utilSvc.getVendorId(request);
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		String todayDate = dateFormat.format(new Date());
 		
-		List<Orders> orders = ordersRepo.getVendorOrders(id, dateFormat.format(new Date()));
+		// List<Orders> orders = ordersRepo.getVendorOrders(id, dateFormat.format(new Date()));
+		List<Orders> orders = ordersRepo.findByVendorId(id);
 		List<VendorReportResponse> vendorReportResponse = new ArrayList<>();
 		
 		for(int x=0; x<orders.size(); x++) {

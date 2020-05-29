@@ -45,7 +45,7 @@ public class VendorController {
 		return (
 				"<h1 style=text-align:center;>Welcome to FoodVendorApp RESTApi</h1>"
 				+ "<center>"
-				+ "<a href='https://documenter.getpostman.com/view/9082520/SztA7Udc?version=latest'"
+				+ "<a href='https://documenter.getpostman.com/view/9082520/SztD477f?version=latest'"
 				+ "<button style=background:#6CA76E;color:white;padding:12px;text-decoration:none;>Go to Documentation</button></a></center>"	
 		);
 	}

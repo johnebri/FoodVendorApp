@@ -1,5 +1,6 @@
 package com.johnebri.foodvendorapp.orders.repository;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -26,7 +27,8 @@ public interface OrdersRepository extends JpaRepository<Orders, Integer>{
 	@Query("UPDATE Orders set order_status = ?1 WHERE id = ?2")
 	void vendorUpdateOrderStatus(String status, int id);
 	
-	@Query(value = "SELECT * FROM Orders o WHERE o.vendor_id = ?1 AND o.date_needed = ?2 AND o.order_status='paid'", nativeQuery = true)	
-	List<Orders> getVendorOrders(int vendorId, String string); 
+	// @Query(value = "SELECT * FROM Orders WHERE vendor_id = ?1 AND date_needed = ?2")	
+	// List<Orders> getVendorOrders(int vendorId, String dateNeeded); 
+	// List<Orders> findByVendorId(int vendoroId);
 
 }

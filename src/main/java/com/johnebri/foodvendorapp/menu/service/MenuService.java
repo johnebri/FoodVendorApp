@@ -54,7 +54,6 @@ public class MenuService {
 		if(searchedMenu == null) {
 			return utilSvc.createResponse(null, "400", 
 				"Menu does not exist");
-
 		}
 		
 		if(searchedMenu.getVendorId() != id) {
